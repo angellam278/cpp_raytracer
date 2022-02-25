@@ -7,8 +7,8 @@
 #include <iostream>
 
 class Material;
-
 // make this a function later? in shapeobject that takes in intersection, normal, tangent etc to calculate  how light bounces off
+
 
 struct intersection {
     point3 point;
@@ -19,7 +19,8 @@ struct intersection {
     //material pointer to find out what ray, if any, is scattered
     //A reference must be initialized on declaration while it is not necessary in case of pointer
     // both share memory address, shared_ptr can be empty
-    std::shared_ptr<Material> material_ptr;
+    Material* material;
+    // &mat to get address , *mat to get value
 
     inline void set_face_normal(const Ray& r, const glm::dvec3& outward_normal) {
         front_face = glm::dot(r.direction(), outward_normal) < 0;

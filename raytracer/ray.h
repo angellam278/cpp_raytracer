@@ -12,7 +12,7 @@ class Ray {
         {}
 
         point3 origin() const { return orig; }
-        // ray direction is not unit length (vector)
+        // ray direction is unit length (vector)
         glm::dvec3 direction() const { return dir; }
 
         //ray as a function P(t)=A+tb
