@@ -10,11 +10,12 @@ public:
     Camera(double image_width, double image_height);
 
     Ray get_ray(int i, int j) const;
+    // looking into the negative z
+    point3 position = point3(0.0, 0.0, 20.0); // eye
+
 
 private:
-    // looking into the negative z
-    point3 position = point3(0.0, 0.0, 1.0); // eye
-    point3 lower_left_corner;
+        point3 lower_left_corner;
 
     double fovy = 90;
     double focal_length = 1 / tan(fovy / 2);

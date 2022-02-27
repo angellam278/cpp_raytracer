@@ -65,6 +65,7 @@ bool Quad::getIntersect(const Ray& ray, double t_min, double t_max, intersection
         // return point of intersection ? or object just updates its normal? 
         //intersect.material_ptr = material_ptr;
         intersect.material = material;
+        intersect.object = this;
         return true;
     }
      
@@ -120,6 +121,7 @@ bool Sphere::getIntersect(const Ray& ray, double t_min, double t_max, intersecti
     // return point of intersection ? or object just updates its normal? 
     //intersect.material_ptr = material_ptr;
     intersect.material = material;
+    intersect.object = this;
 
     return true;
 

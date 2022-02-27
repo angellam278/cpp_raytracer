@@ -7,10 +7,12 @@
 #include <iostream>
 
 class Material;
+class Object;
 // make this a function later? in shapeobject that takes in intersection, normal, tangent etc to calculate  how light bounces off
 
 
 struct intersection {
+    Object* object;
     point3 point;
     // normals always point against ray (so if ray is hitting from inside, normal will point in
     glm::dvec3 normal;
