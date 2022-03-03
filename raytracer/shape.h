@@ -3,53 +3,44 @@
 #define SHAPE_H
 
 #include "object.h"
-#include "vec3.h"
+
 
 class Material;
+
 class Sphere : public Object {
 
-public:
-    Sphere();
-    // radius to float?? 
-    Sphere(point3 center, double radius, Material* material);
-    // Override the destructor.
-    virtual ~Sphere() override;
+    public:
+        Sphere();
+        Sphere(point3 center, double radius, Material* material);
+        // Override the destructor.
+        virtual ~Sphere() override;
 
-    bool getIntersect(const Ray& ray, double t_min, double t_max, intersection& intersect);
-    glm::dvec3 getNormal(const point3 point);
+        bool get_intersect(const Ray& ray, double t_min, double t_max, intersection& intersect);
 
-    point3 position;
-    double radius;
+        point3 position; // center of sphere
+        double radius;
+        Material* material;
 
-
-    Material* material;
 };
 
 
 class Quad : public Object
 {
-public:
-    /* The default constructor.
-        Note that this will define a unit sphere at the origin. */
-    Quad();
-    Quad(point3 p1, point3 p2, point3 p3, Material* material);
+    public:
+        Quad();
+        Quad(point3 p1, point3 p2, point3 p3, Material* material);
+        // Override the destructor.
+        virtual ~Quad() override;
 
-    // Override the destructor.
-    virtual ~Quad() override;
+        // 3 points on the plane to compute the 2 vectors defining the plane
+        point3 p1; // middle point connecting p2 and p3
+        point3 p2;
+        point3 p3;
+        Material* material;
 
-    // Override the function to test for intersections.
-    bool getIntersect(const Ray& ray, double t_min, double t_max, intersection& intersect);
-
-
-public:
-    // position at center 
-  
-    // position = point3 p1; is the point on plane
-    // 2 vectors defining the plane
-    point3 p1;
-    point3 p2;
-    point3 p3;
-    Material* material;
+        // Override the function to test for intersections.
+        bool get_intersect(const Ray& ray, double t_min, double t_max, intersection& intersect);
+    
 };
 
 #endif

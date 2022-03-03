@@ -3,13 +3,7 @@
 
 
 // Default constructor.
-Object::Object()
-{
-
-}
+Object::Object() {}
 
 // The destructor.
-Object::~Object()
-{
-
-}
+Object::~Object() {}

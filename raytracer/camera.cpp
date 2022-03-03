@@ -1,6 +1,6 @@
 #include "camera.h"
 
-
+// static camera
 Camera::Camera(double image_width, double image_height) {
     resolution_x = image_width;
     resolution_y = image_height;
@@ -27,5 +27,6 @@ Ray Camera::get_ray(int i, int j) const {
     // convert pixel i, j to image plane's u, v coordinates
     point3 pixel_pos = lower_left_corner + ((u * (double)i) * step_x) + ((v * (double)j) * step_y);
     glm::dvec3 ray_direction = glm::normalize(pixel_pos - position);
+
     return Ray(this->position, ray_direction);
 }
