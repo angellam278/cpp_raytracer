@@ -142,108 +142,115 @@ int main(int argc, char** argv) {
             while (ifs.good()){
                 ifs >> type;
                 if (type == "POS") {
-                    ifs >> pos.x >> pos.y >> pos.z;
+ifs >> pos.x >> pos.y >> pos.z;
                 }
                 else if (type == "RADIUS") {
-                    ifs >> radius;
+                ifs >> radius;
                 }
                 else if (type == "DIFF") {
-                    ifs >> diffuse.x >> diffuse.y >> diffuse.z;
+                ifs >> diffuse.x >> diffuse.y >> diffuse.z;
                 }
                 else if (type == "SPEC") {
-                    ifs >> specular.x >> specular.y >> specular.z;
+                ifs >> specular.x >> specular.y >> specular.z;
                 }
                 else if (type == "SHININESS") {
-                    ifs >> shininess;
+                ifs >> shininess;
                 }
                 else if (type == "//" || type.find("//") == 0) {
-                    // skip if comment
-                    ifs.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                    //discard characters until newline is found
+                // skip if comment
+                ifs.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                //discard characters until newline is found
                 }
                 else {
-                    for (int i = 0; i < type.length(); ++i) { //we use a colon instead of in
-                        ifs.unget();
-                    }
-                    break;
+                for (int i = 0; i < type.length(); ++i) { //we use a colon instead of in
+                    ifs.unget();
+                }
+                break;
                 }
             }
-            Material material = Material(diffuse, specular, shininess);
-            scene_objects.push_back(std::make_shared<Sphere>(pos, radius, &material));
-            std::cout << "adding sphere\n    pos: " << pos.x << "," << pos.y << "," << pos.z  << "\n    radius: " << radius << "\n    diffuse: " << diffuse.x << "," << diffuse.y << "," << diffuse.z << "\n    specular: " << specular.x << "," << specular.y << "," << specular.z << "\n    shininess: " << shininess << std::endl;
+            scene_objects.push_back(std::make_shared<Sphere>(pos, radius, new Material(diffuse, specular, shininess)));
+            std::cout << "adding sphere\n    pos: " << pos.x << "," << pos.y << "," << pos.z << "\n    radius: " << radius << "\n    diffuse: " << diffuse.x << "," << diffuse.y << "," << diffuse.z << "\n    specular: " << specular.x << "," << specular.y << "," << specular.z << "\n    shininess: " << shininess << std::endl;
         }
         else if (type == "QUAD") {
-            std::cout << "starting quad" << std::endl;
+        std::cout << "starting quad" << std::endl;
 
-            point3 pos_array[3]; // default to center if not specified
-            point3* pos_ptr = pos_array;
-            color diffuse = color(0);
-            color specular = color(0);
-            float shininess = 0.0f;
-            while (ifs.good()) {
-                ifs >> type;
-                if (type == "POS") {
-                    ifs >> pos_ptr->x >> pos_ptr->y >> pos_ptr->z;
-                    pos_ptr++;
-                }
-                else if (type == "DIFF") {
-                    ifs >> diffuse.x >> diffuse.y >> diffuse.z;
-                }
-                else if (type == "SPEC") {
-                    ifs >> specular.x >> specular.y >> specular.z;
-                }
-                else if (type == "SHININESS") {
-                    ifs >> shininess;
-                }
-                else if (type == "//" || type.find("//") == 0) {
-                    // skip if comment
-                    ifs.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                    //discard characters until newline is found
-                }
-                else {
-                    //std::cout << "--break--" << type << std::endl;
-                    for (int i = 0; i < type.length(); ++i) { //we use a colon instead of in
-                        ifs.unget();
-                    }
-                    break;
-                }
+        point3 pos_array[3]; // default to center if not specified
+        point3* pos_ptr = pos_array;
+        color diffuse = color(0);
+        color specular = color(0);
+        float shininess = 0.0f;
+        while (ifs.good()) {
+            ifs >> type;
+            if (type == "POS") {
+                ifs >> pos_ptr->x >> pos_ptr->y >> pos_ptr->z;
+                pos_ptr++;
             }
-            Material material = Material(diffuse, specular, shininess);
-            scene_objects.push_back(std::make_shared<Quad>(pos_array[0], pos_array[1], pos_array[2], &material));
-            std::cout << "adding quad\n    pos_array[0]: " << pos_array[0].x << "," << pos_array[0].y << "," << pos_array[0].z << "\n    pos_array[1]: " << pos_array[1].x << "," << pos_array[1].y << "," << pos_array[1].z << "\n    pos_array[2]: " << pos_array[2].x << "," << pos_array[2].y << "," << pos_array[2].z << "\n    diffuse: " << diffuse.x << "," << diffuse.y << "," << diffuse.z << "\n    specular: " << specular.x << "," << specular.y << "," << specular.z << "\n    shininess: " << shininess << std::endl;
+            else if (type == "DIFF") {
+                ifs >> diffuse.x >> diffuse.y >> diffuse.z;
+            }
+            else if (type == "SPEC") {
+                ifs >> specular.x >> specular.y >> specular.z;
+            }
+            else if (type == "SHININESS") {
+                ifs >> shininess;
+            }
+            else if (type == "//" || type.find("//") == 0) {
+                // skip if comment
+                ifs.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                //discard characters until newline is found
+            }
+            else {
+                //std::cout << "--break--" << type << std::endl;
+                for (int i = 0; i < type.length(); ++i) { //we use a colon instead of in
+                    ifs.unget();
+                }
+                break;
+            }
+        }
+        scene_objects.push_back(std::make_shared<Quad>(pos_array[0], pos_array[1], pos_array[2], new Material(diffuse, specular, shininess)));
+        std::cout << "adding quad\n    pos_array[0]: " << pos_array[0].x << "," << pos_array[0].y << "," << pos_array[0].z << "\n    pos_array[1]: " << pos_array[1].x << "," << pos_array[1].y << "," << pos_array[1].z << "\n    pos_array[2]: " << pos_array[2].x << "," << pos_array[2].y << "," << pos_array[2].z << "\n    diffuse: " << diffuse.x << "," << diffuse.y << "," << diffuse.z << "\n    specular: " << specular.x << "," << specular.y << "," << specular.z << "\n    shininess: " << shininess << std::endl;
 
         }
         else if (type == "//" || type.find("//") == 0) {
-            // skip if comment
-            ifs.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            //discard characters until newline is found
+        // skip if comment
+        ifs.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        //discard characters until newline is found
         }
         // dont need eof because io stream
     }
-   
+
     std::cout << "MAXDEPTH: " << max_depth << " WIDTH: " << screen_width << " HEIGHT: " << screen_height << " BG: " << bg_color.x << "," << bg_color.y << "," << bg_color.z << std::endl;
 
     // Camera
     Camera camera(screen_width, screen_height);
-  
+
     // Render
 
     //The pixels are written out in rows with pixels left to right.
     //The rows are written out from top to bottom.
     //By convention, each of the red / green / blue components range from 0.0 to 1.0.
-    
+
     /*writing into file image.ppm*/
     std::ofstream ofs(out_file, std::ios::out);
     ofs << "P3\n" << screen_width << ' ' << screen_height << "\n255\n";
-   
+
     // we start drawing from bottom left up 
-    for (int j = screen_height - 1; j >= 0 ; --j) {
+    for (int j = screen_height - 1; j >= 0; --j) {
         std::cerr << "\rScanlines remaining: " << j << ' ' << std::flush;
         color pixel_color(0, 0, 0);
         for (int i = 0; i < screen_width; ++i) {
             Ray primary_ray = camera.get_ray(i, j);
             pixel_color = ray_color(scene_objects, scene_lights, primary_ray, max_depth, bg_color, camera);
             // image coordinate has 0,0 on top
+            for (int c = 0; c < 3; c++) {
+                if (pixel_color[c] > 1.0) {
+                    pixel_color[c] = 1.0;
+                }
+                if (pixel_color[c] < 0.0) {
+                    pixel_color[c] = 0.0;
+                }
+            }
+            
             write_color(ofs, pixel_color);
         }
         //break;
@@ -260,7 +267,10 @@ Ray get_reflected_ray(const Ray& ray, const intersection& intersect) {
     glm::dvec3 normalized_normal = glm::normalize(intersect.normal);
     glm::dvec3 v_parallel = normalized_normal * glm::dot(normalized_normal, v);
     glm::dvec3 v_perp = v - v_parallel;
-    return Ray(intersect.point, glm::normalize(v_parallel - v_perp));
+    
+    glm::dvec3 r = ray.direction() - 2 * (glm::dot(ray.direction(), normalized_normal)) * normalized_normal;
+    //v_parallel - v_perp
+    return Ray(intersect.point, r);
 }
 
 //Ray get_refracted_ray(const Ray& ray, const intersection& intersect) {
@@ -297,20 +307,20 @@ std::vector<Light> send_shadow_rays(const std::vector<Light>& scene_lights, cons
         // ray from light to intersection point :  glm::normalize(intersect.point - light.position);
         // ... or intersection to light? I guess doesn't matter
         //
-        // light to intersection
+        // light to intersection (end - beginning)
         glm::dvec3 ray_dir = glm::normalize(intersect.point - light.position);
         bool in_shadow = false;
         Ray shadow_ray = Ray(light.position, ray_dir);
 
         // need to get t for where light is!!!!
         intersection object_intersect;
-        intersect.object->getIntersect(shadow_ray, epsilon, infinity, object_intersect);
+        intersect.object->getIntersect(shadow_ray, DBL_EPSILON, infinity, object_intersect);
         double obj_t = object_intersect.t;
 
         double closest_so_far = infinity;
         for (const auto& object : scene_objects) {
             // get object's intersction with light 
-            if (object->getIntersect(shadow_ray, epsilon, closest_so_far, object_intersect)) {
+            if (object->getIntersect(shadow_ray, DBL_EPSILON, closest_so_far, object_intersect)) {
                 // point where light hits object
                 if (object_intersect.t < obj_t) {
                     // this object is closer to light than the point of itnersection's - > in shadow
@@ -337,10 +347,12 @@ std::vector<Light> send_shadow_rays(const std::vector<Light>& scene_lights, cons
 // function that returns the color of the background (a simple gradient)
 // depth to prevent infinite loop
 color ray_color(std::vector<shared_ptr<Object>>& scene_objects, const std::vector<Light>& scene_lights, const Ray& in_ray, int depth, const color& bg_color, const Camera& camera) {
+    
+    
     intersection intersect;
 
     // to do use episilon? 
-    bool first_intersection = getObjectIntersect(scene_objects, in_ray, epsilon, infinity, intersect);
+    bool first_intersection = getObjectIntersect(scene_objects, in_ray, DBL_EPSILON, infinity, intersect);
     if (!first_intersection) {
         return bg_color;
     }
@@ -349,23 +361,36 @@ color ray_color(std::vector<shared_ptr<Object>>& scene_objects, const std::vecto
 
     // local illumination
     color total_color = color(0.0, 0.0, 0.0);
+    
+    // If we've exceeded the ray bounce limit, no more light is gathered.
+    if (depth <= 0) {
+        return total_color;
+    }
+    
     // for all lights
     for (const Light& light : contributing_lights) {
         total_color += get_phong(intersect, light, camera);
         //print_vec3("co: ", total_color);
     }
+
     // add ambient 
     total_color *= ambient_light;
 
-    // If we've exceeded the ray bounce limit, no more light is gathered.
-    if (depth <= 0) {
-        return total_color;
-    }
-        
-    //Ray reflected_ray = get_reflected_ray(in_ray, intersect);
-    //Ray refracted_ray = get_refracted_ray(in_ray, intersect);
+    if (glm::length2(intersect.material->specular) > 0.0) {
+        // has specular
+        Ray reflected_ray = get_reflected_ray(in_ray, intersect);
+        double rind = (double) intersect.material->refraction_index;
+        //INTERSECTION IS WERID SOMETIMES GIVING INTERSECT the red dots 
+        // if  near 0 is correct
+        //std::cout << glm::dot(reflected_ray.direction() + in_ray.direction(), intersect.normal) <<std::endl;
+        // attentuate
+        //total_color += rind*color(0.0, 0.0, 1.0);
 
-    //total_color += ray_color(scene_objects, scene_lights, reflected_ray, depth-1, bg_color, camera);
+        reflected_ray.orig = reflected_ray.orig + reflected_ray.dir * 1e-4;
+        total_color += (rind * ray_color(scene_objects, scene_lights, reflected_ray, depth - 1, bg_color, camera));
+    }
+    
+    //Ray refracted_ray = get_refracted_ray(in_ray, intersect);
     //total_color += ray_color(scene_objects, scene_lights, refracted_ray, depth-1, bg_color, camera);
 
     return total_color;
