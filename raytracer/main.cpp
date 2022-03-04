@@ -7,7 +7,7 @@
 #include "light.h"
 #include <fstream> // std::ofstream
 #include <string> 
-#include <omp.h>
+#include <omp.h> // openmp for debug
 #include <iostream>
 #include <vector>
 
@@ -153,12 +153,12 @@ int main(int argc, char** argv) {
         }
 
         else if (type == "QUAD") {
-
             point3 pos_array[3]; // default to center if not specified
             point3* pos_ptr = pos_array;
             color diffuse = color(0);
             color specular = color(0);
             float shininess = 0.0f;
+
             while (ifs.good()) {
                 ifs >> type;
                 if (type == "POS") {
@@ -214,9 +214,9 @@ int main(int argc, char** argv) {
     std::ofstream ofs(out_file, std::ios::out);
     ofs << "P3\n" << screen_width << ' ' << screen_height << "\n255\n";
 
-    // enable openmp parallel 
-    #pragma omp parallel
     // we start drawing from bottom left up 
+    // enable openmp parallel: tells the compiler to auto-parallelize the for loop
+    #pragma omp parallel for
     for (int j = screen_height - 1; j >= 0; --j) {
         for (int i = 0; i < screen_width; ++i) {
             // shoots primary ray from camera
@@ -300,8 +300,7 @@ std::vector<Light> send_shadow_rays(const std::vector<Light>& scene_lights, cons
     return contributing_lights;
 }
 
-// check for closest intersection between ray and scene_objects
-bool get_objects_intersect(const std::vector<std::shared_ptr<Object>>& scene_objects, const Ray& r, double t_min, double t_max, intersection& intersect) {
+bool get_first_intersect(const std::vector<std::shared_ptr<Object>>& scene_objects, const Ray& r, double t_min, double t_max, intersection& intersect) {
     intersection temp_intersect;
     bool hit_anything = false;
     double closest_so_far = t_max;
@@ -310,8 +309,10 @@ bool get_objects_intersect(const std::vector<std::shared_ptr<Object>>& scene_obj
     for (const auto& object : scene_objects) {
         if (object->get_intersect(r, t_min, closest_so_far, temp_intersect)) {
             hit_anything = true;
-            closest_so_far = temp_intersect.t;
-            intersect = temp_intersect;
+            if (temp_intersect.t < closest_so_far) {
+                closest_so_far = temp_intersect.t;
+                intersect = temp_intersect;
+            }
         }
     }
 
@@ -323,27 +324,29 @@ bool get_objects_intersect(const std::vector<std::shared_ptr<Object>>& scene_obj
 color ray_color(const std::vector<std::shared_ptr<Object>>& scene_objects, const std::vector<Light>& scene_lights, const Ray& in_ray, int depth, const color& bg_color, const Camera& camera) {
   
     intersection intersect;
-
-    // using epsilon to prevent self collision
-    bool first_intersection = get_objects_intersect(scene_objects, in_ray, DBL_EPSILON, INFINITY, intersect);
-    if (!first_intersection) {
-        return bg_color;
-    }
-
-    // get contributing lights
-    std::vector<Light> contributing_lights = send_shadow_rays(scene_lights, scene_objects, intersect);
-
-    // local illumination
     color total_color = color(0.0, 0.0, 0.0);
-    // for all lights, accumulate the phone local illumination value
-    for (const Light& light : contributing_lights) {
-        total_color += get_phong(intersect, light, camera);
-    }
 
     // If we've exceeded the ray bounce limit, no more light is gathered.
     if (depth <= 0) {
         return total_color;
     }
+
+    // using epsilon to prevent self collision
+    bool first_intersection = get_first_intersect(scene_objects, in_ray, DBL_EPSILON, INFINITY, intersect);
+    if (!first_intersection) {
+        return bg_color;
+    }
+    
+    // get contributing lights
+    std::vector<Light> contributing_lights = send_shadow_rays(scene_lights, scene_objects, intersect);
+
+    // local illumination
+    
+    // for all lights, accumulate the phone local illumination value
+    for (const Light& light : contributing_lights) {
+        total_color += get_phong(intersect, light, camera);
+    }
+    return total_color;
 
     // add ambient (0.5, 0.5, 0.5)
     total_color *= color(0.5);
