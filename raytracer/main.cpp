@@ -54,6 +54,7 @@ int main(int argc, char** argv) {
     int screen_height = 400;
     int max_depth = 50; // to limit specular reflection bounces
     color bg_color = color(0); // black
+    int sample = 1; // supersampling size: 1 = none
 
     // list of scene shapes and lights
     std::vector<std::shared_ptr<Object> > scene_objects;
@@ -70,7 +71,7 @@ int main(int argc, char** argv) {
             ifs >> screen_width >> screen_height;
         }
         else if (type == "ANTIALIAS") {
-            std::cout << "adding antialias" << std::endl;
+            ifs >> sample;
         }
         else if (type == "MAXDEPTH") {
             ifs >> max_depth;
@@ -200,10 +201,11 @@ int main(int argc, char** argv) {
         // dont need to check eof because using io stream
     }
 
-    std::cout << "MAXDEPTH: " << max_depth << "\nWIDTH: " << screen_width << "\nHEIGHT: " << screen_height << "\nBG: " << bg_color.x << "," << bg_color.y << "," << bg_color.z << std::endl;
+    std::cout << "MAXDEPTH: " << max_depth << "\nWIDTH: "  << screen_width << "\nHEIGHT: " << screen_height 
+        << "\nBG: " << bg_color.x << "," << bg_color.y << "," << bg_color.z << "\nANTIALIAS: " << sample << std::endl;
 
     // creating Camera
-    Camera camera(screen_width, screen_height);
+    Camera camera(screen_width* (double)sample, screen_height* (double)sample);
 
     // Render
 
@@ -217,14 +219,21 @@ int main(int argc, char** argv) {
     // we start drawing from bottom left up 
     // enable openmp parallel: tells the compiler to auto-parallelize the for loop
     #pragma omp parallel for
-    for (int j = screen_height - 1; j >= 0; --j) {
-        for (int i = 0; i < screen_width; ++i) {
-            // shoots primary ray from camera
-            Ray primary_ray = camera.get_ray(i, j);
-            // recursive get ray color
-            color pixel_color = ray_color(scene_objects, scene_lights, primary_ray, max_depth, bg_color, camera);
-            // store in image data
-            image_data[i][j] = pixel_color;
+    for (int j = screen_height*sample - 1; j >= 0; --j) {
+        for (int i = 0; i < screen_width * sample; ++i) {
+            color pixel_color = color(0.0);
+            for (int s = 0; s < sample; ++s) {
+                // supersampling
+                double ii = i + (double)s;
+                double jj = j + (double)s; 
+
+                // shoots primary ray from camera
+                Ray primary_ray = camera.get_ray(ii, jj);
+                // recursive get ray color
+                pixel_color += ray_color(scene_objects, scene_lights, primary_ray, max_depth, bg_color, camera);
+            }
+            // store sum of pixel colors in image data
+            image_data[i/sample][j/sample] = pixel_color * (1 / (double)sample);
         }
     }
 
