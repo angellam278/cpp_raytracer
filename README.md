@@ -1,4 +1,4 @@
-# c++ raytracer
+# c++ Raytracer
 
 ![sample](sample.png)
 
