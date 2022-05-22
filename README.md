@@ -1,8 +1,8 @@
-# c++ Raytracer
+# C++ Raytracer
 
 ![sample](sample.png)
 
-Created a Raytracer using c++. 
+Wrote my first Raytracer using c++. 
 
 Program reads a [scene description file (.txt)](https://github.com/angellam278/cpp_raytracer/blob/main/raytracer/cornell1_test.txt) and outputs a .ppm file. 
 
