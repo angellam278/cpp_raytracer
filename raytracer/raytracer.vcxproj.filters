@@ -24,16 +24,13 @@
     <ClCompile Include="material.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="vec3.h">
-      <Filter>Header Files</Filter>
-    </ClCompile>
     <ClCompile Include="shape.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="vec3.cpp">
+    <ClCompile Include="camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="objectList.cpp">
+    <ClCompile Include="light.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -53,17 +50,14 @@
     <ClInclude Include="utility.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="objectList.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="shape.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ray.cpp">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="light.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

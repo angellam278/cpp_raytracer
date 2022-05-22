@@ -10,6 +10,7 @@
 #include <omp.h> // openmp for debug
 #include <iostream>
 #include <vector>
+#include <filesystem>
 
 // forward declaration
 color ray_color(const std::vector<std::shared_ptr<Object>>& scene_objects, const std::vector<Light>& scene_lights, const Ray& ray, int depth, const color& bg_color, const Camera& camera);
@@ -32,12 +33,6 @@ int main(int argc, char** argv) {
     // argv[0] is .exe
     const char* scene_des = argv[1];
     const char* out_file = argv[2];
-    //if (std::experimental::filesystem::is_directory(scene_des)) {
-    //    for (const auto& file : std::experimental::filesystem::directory_iterator("")) {
-    //        std::cout << file.path() << std::endl;
-    //        // output many images and use ffmpeg to combine 
-    //    }
-    //}
     
     std::cout << "scene description file: " << scene_des << "\noutput: " << out_file << std::endl;
 
@@ -261,13 +256,6 @@ Ray get_reflected_ray(const Ray& ray, const intersection& intersect) {
     return Ray(intersect.point + r * 1e-4, r);
 }
 
-//Ray get_refracted_ray(const Ray& ray, const intersection& intersect) {
-//    // send out reflected ray 
-//    // from intersection out
-//
-//    return Ray(intersect.point, glm::normalize(v_parallel - v_perp));
-//}
-
 // goes through all lights in scene and return a list of lights contributing to the color of object at intersection
 std::vector<Light> send_shadow_rays(const std::vector<Light>& scene_lights, const std::vector<std::shared_ptr<Object>>& scene_objects, const intersection& intersect) {
 
@@ -368,9 +356,6 @@ color ray_color(const std::vector<std::shared_ptr<Object>>& scene_objects, const
         // recursive call to get color of the reflected ray, each time depth is decreased and rind lowers the effect of reflection color
         total_color += (rind * ray_color(scene_objects, scene_lights, reflected_ray, depth - 1, bg_color, camera));
     }
-    
-    //Ray refracted_ray = get_refracted_ray(in_ray, intersect);
-    //total_color += ray_color(scene_objects, scene_lights, refracted_ray, depth-1, bg_color, camera);
 
     return total_color;
 }

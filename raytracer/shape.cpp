@@ -45,32 +45,6 @@ bool Sphere::get_intersect(const Ray& ray, double t_min, double t_max, intersect
             return false;
     }
 
-    //double roota = (-b - sqrtd) / 2 * a;
-    //double rootb = (-b + sqrtd) / 2 * a;
-    //if (roota < 0.0 && rootb < 0.0) {
-    //    // no intersection 
-    //    return false;
-    //}
-    //// root a should be less than root b
-    //// we want the earlier intersection
-    //double t = roota;
-    //if (roota > 0.0) {
-    //    if (roota < t_min || roota > t_max) {
-    //        return false;
-    //    }
-    //    t = roota;
-    //}
-    //else {
-    //    // root a is behind so look at root b ( already check case both is under 0.0)
-    //    // so if a is < 0.0 then b must be > 0.0
-    //    if (rootb < t_min || rootb > t_max) {
-    //        // too close to zero
-    //        return false;
-    //    }
-    //    t = rootb;
-    //}
-
-
     // record intersection info:
     intersect.t = root;
     // point of intersection in global coordinate
@@ -98,58 +72,6 @@ Quad::Quad(point3 p1, point3 p2, point3 p3, Material* material) {
     this->p3 = p3;
     this->material = material;
 }
-
-//
-//bool Quad::get_intersect(const Ray& ray, double t_min, double t_max, intersection& intersect) {
-//
-//    // bottom left front corner: position
-//    // bottom plane: x = btc + u(0, 0, -height) + v(width, 0, 0)
-//
-//    glm::dvec3 v1 = p2 - p1;
-//    glm::dvec3 v2 = p3 - p1;
-//    //print_vec3("v1", v1);
-//    //print_vec3("v2", v2);
-//
-//    double width = glm::length(v1);
-//    double height = glm::length(v2);
-//    //std::cout << width << std::endl;
-//    //std::cout << height << std::endl;
-//    glm::dvec3 normal = glm::cross(v1, v2);
-//    //print_vec3("normal", normal);
-//    /*print_vec3("end1", end1);
-//    print_vec3("end2", end2);
-//    print_vec3("v1", v1);
-//    print_vec3("v2", v2);
-//    */
-//    double dd = glm::dot(normal, p1);
-//    //std::cout << dd << std::endl;
-//    double denom = glm::dot(normal, ray.direction());
-//    //std::cout << denom << std::endl;
-//    //  make overloaded near_zero: parallel 
-//    if (glm::abs(denom) < epsilon) {
-//        //std::cout << "denom near 0" << std::endl;
-//        return false;
-//    }
-//    double t = -(glm::dot(normal, (ray.origin() - p1))) / denom;
-//    point3 poi = ray.at(t);
-//    double u = glm::dot((poi - p1), v1);
-//    double v = glm::dot((poi - p1), v2);
-//
-//    if ((t < infinity) && (t > 0.0) && (abs(u) <= width) && (abs(v) <= height)) {
-//        intersect.t = t;
-//        // point of intersection in global coordinate
-//        intersect.point = ray.at(intersect.t);
-//        // unnormalized normal
-//        intersect.set_face_normal(ray, normal);
-//        // return point of intersection ? or object just updates its normal? 
-//        //intersect.material_ptr = material_ptr;
-//        intersect.material = material;
-//        intersect.object = this;
-//        return true;
-//    }
-//     
-//    return false;
-//}
 
 /*
  Quad intersection
