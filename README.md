@@ -1,1 +1,1 @@
-# cs434_raytracer
+# c++ raytracer
